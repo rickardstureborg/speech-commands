@@ -1,0 +1,12 @@
+name: speech-commands
+channels:
+  - conda-forge
+  - pytorch
+dependencies:
+  - python
+  - numpy>=1.16
+  - pytorch>0.4
+  - pip
+  - pip:
+    - torchvision==0.1.9
+    - matplotlib
