@@ -14,4 +14,4 @@ Update the Environment:
 2. Set up virtual environment
 
 3. To train model on dataset (UNIX command):
-`./main.py --train`
+`./main.py --train --config_path config.cfg`
