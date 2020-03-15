@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 # Dataset
-slu_data/
+E2E-SLU/slu_data/

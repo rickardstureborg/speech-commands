@@ -7,3 +7,11 @@ Create the environment:
 
 Update the Environment:
 `conda env update --name speech-commands --file environment.yml --prune`
+
+## Running model
+1. Set hyperparameters, dataset location and other settings in config.cfg
+
+2. Set up virtual environment
+
+3. To train model on dataset (UNIX command):
+`./main.py --train`
