@@ -32,8 +32,12 @@ config = data.parse_config(config_path)
 # Get datasets as pandas dataframes
 train_df, valid_df, test_df = data.get_dataset(config)
 
+print(train_df[1])
+
 if train:
     # TODO train model
+    a = 0
 
 if infer:
     # TODO add inference ability on random.wav files
+    a = 1

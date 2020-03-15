@@ -23,7 +23,7 @@ def parse_config(config_file):
 
     # Training configurations
     config.data_path = parser.get("training", "data_path")
-    config.training_batch_size = parser.get("training", "training_batch_size")
+    config.training_batch_size = int(parser.get("training", "training_batch_size"))
 
     return config
 
@@ -48,7 +48,7 @@ def get_dataset(config):
     values_per_col = []
     output_columns = ["action", "location", "object"]
     for col in output_columns:
-        possible_values = Counter(training_dataframe)
+        possible_values = Counter(training_dataframe[col])
         for idx, value in enumerate(possible_values):
             possible_intents[col][value] = idx
         values_per_col.append(len(possible_values))
@@ -80,7 +80,7 @@ class SLUData(torch.utils.data.Dataset):
         if num >= len(self.df):
             sys.exit("Cannot retrieve data, out of bounds")
         # Path to wav file for this dataset row
-        wav_path = os.path.jooin(self.path, self.df.loc[num].path)
+        wav_path = os.path.join(self.path, self.df.loc[num].path)
         # Create data representation of wav file
         # NOTE: This representation is the one used by the original creators of this dataset.
         #       You can find the relevant paper linked at the top of this file. All credit for
