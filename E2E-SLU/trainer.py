@@ -78,12 +78,12 @@ class Trainer:
         for num, batch in enumerate(dataset.loader):
             xs, ys = batch
             batch_size = len(xs)
-            num_examples += batch_size
+            num_examples_tested += batch_size
             iloss, iaccuracy = self.model(xs, ys)
             test_loss += iloss.cpu().data.numpy().item() * batch_size
             test_accuracy += iaccuracy.cpu().data.numpy().item() * batch_size
-        test_accuracy = test_accuracy / num_examples
-        test_loss = test_loss / num_examples
+        test_accuracy = test_accuracy / num_examples_tested
+        test_loss = test_loss / num_examples_tested
         # Return accuracy and loss for this model on the test set
         return test_accuracy, test_loss
 
