@@ -21,11 +21,16 @@ def parse_config(config_file):
     parser.read(config_file)
     # Set every config option from the configuration file
     # CNN configurations
-    config.cnn_filter_input_size = [int(x) for x in parser.get("cnn", "cnn_filter_input_size").split(",")]
-    config.cnn_filter_output_size = [int(x) for x in parser.get("cnn", "cnn_filter_output_size").split(",")]
+    config.cnn_filter_input_sizes = [int(x) for x in parser.get("cnn", "cnn_filter_input_sizes").split(",")]
+    config.cnn_filter_output_sizes = [int(x) for x in parser.get("cnn", "cnn_filter_output_sizes").split(",")]
     config.cnn_kernel_sizes = [int(x) for x in parser.get("cnn", "cnn_kernel_sizes").split(",")]
     config.cnn_strides = [int(x) for x in parser.get("cnn", "cnn_strides").split(",")]
     config.cnn_pool_kernel_sizes = [int(x) for x in parser.get("cnn", "cnn_pool_kernel_sizes").split(",")]
+
+    # RNN Configurations
+    config.rnn_hidden_num = [int(x) for x in parser.get("rnn", "rnn_hidden_num").split(",")]
+    config.rnn_bidirectional = (parser.get("rnn", "rnn_bidirectional") == "True")
+    config.rnn_dropout = [float(x) for x in parser.get("rnn", "rnn_dropout").split(",")]
 
     # Training configurations
     config.data_path = parser.get("training", "data_path")
@@ -56,13 +61,14 @@ def get_dataset(config):
     # Get all possible output values and assign values to them
     possible_intents = {"action": {}, "object": {}, "location": {}}
     values_per_col = []
-    output_columns = ["action", "location", "object"]
+    output_columns = ["action", "object", "location"]
     for col in output_columns:
         possible_values = Counter(training_dataframe[col])
         for idx, value in enumerate(possible_values):
             possible_intents[col][value] = idx
         values_per_col.append(len(possible_values))
     config.possible_intents = possible_intents
+    config.values_per_col = values_per_col
     # Create and return dataset classes
     train_data = SLUData(training_dataframe, possible_intents, path, config)
     valid_data = SLUData(valid_dataframe, possible_intents, path, config)
@@ -90,6 +96,7 @@ class SLUData(torch.utils.data.Dataset):
         """ Return an input value and output value for a given dataset location """
         if num >= len(self.df):
             sys.exit("Cannot retrieve data, out of bounds")
+        num = num % len(self.df)
         # Path to wav file for this dataset row
         wav_path = os.path.join(self.path, self.df.loc[num].path)
         # Create data representation of wav file

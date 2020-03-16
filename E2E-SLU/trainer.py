@@ -2,6 +2,7 @@
 import torch
 import data
 import models
+from tqdm import tqdm
 
 """ Handles training related functions and holds training information """
 class Trainer:
@@ -42,7 +43,7 @@ class Trainer:
         # Put model into training mode
         self.model.train()
         # Step through dataset using pytorch data loader, and a tqdm progress bar
-        for num, batch in enumerate(tqdm(dataset.loader())):
+        for num, batch in enumerate(tqdm(dataset.loader)):
             xs, ys = batch
             batch_size = len(xs)
             num_examples_trained += batch_size
@@ -55,7 +56,7 @@ class Trainer:
             # Step the optimizer
             self.optimizer.step()
             train_loss += iloss.cpu().data.numpy().item() * batch_size
-            train_acc += iaccuracy.cpu().data.num().item() * batch_size
+            train_accuracy += iaccuracy.cpu().data.numpy().item() * batch_size
             # Print results info
             if num % print_interval == 0:
                 print("training loss: " + str(iloss.cpu().data.numpy().item()))
