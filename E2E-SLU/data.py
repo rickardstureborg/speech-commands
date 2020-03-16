@@ -20,10 +20,20 @@ def parse_config(config_file):
     parser = configparser.ConfigParser()
     parser.read(config_file)
     # Set every config option from the configuration file
+    # CNN configurations
+    config.cnn_filter_input_size = [int(x) for x in parser.get("cnn", "cnn_filter_input_size").split(",")]
+    config.cnn_filter_output_size = [int(x) for x in parser.get("cnn", "cnn_filter_output_size").split(",")]
+    config.cnn_kernel_sizes = [int(x) for x in parser.get("cnn", "cnn_kernel_sizes").split(",")]
+    config.cnn_strides = [int(x) for x in parser.get("cnn", "cnn_strides").split(",")]
+    config.cnn_pool_kernel_sizes = [int(x) for x in parser.get("cnn", "cnn_pool_kernel_sizes").split(",")]
 
     # Training configurations
     config.data_path = parser.get("training", "data_path")
+    config.seed = int(parser.get("training", "seed"))
     config.training_batch_size = int(parser.get("training", "training_batch_size"))
+    config.num_epochs = int(parser.get("training", "num_epochs"))
+    config.learning_rate = float(parser.get("training", "learning_rate"))
+    config.save_path = parser.get("training", "save_path")
 
     return config
 
@@ -52,6 +62,7 @@ def get_dataset(config):
         for idx, value in enumerate(possible_values):
             possible_intents[col][value] = idx
         values_per_col.append(len(possible_values))
+    config.possible_intents = possible_intents
     # Create and return dataset classes
     train_data = SLUData(training_dataframe, possible_intents, path, config)
     valid_data = SLUData(valid_dataframe, possible_intents, path, config)

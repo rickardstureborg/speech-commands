@@ -11,7 +11,7 @@ import sys
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--train', action = 'store_true', help = 'run training with given config file')
-parser.add_argument('--cont', action = 'store_true', help = 'continue from previous checkpoint')
+parser.add_argument('--cont', action = 'store_true', help = 'continue from previous point')
 parser.add_argument('--infer', action = 'store_true', help = 'run inference with trained model')
 parser.add_argument('--config_path', type = str, help = 'path to configuration file')
 args = parser.parse_args()
@@ -29,15 +29,36 @@ if train and infer:
 # Parse given configuration files
 config = data.parse_config(config_path)
 
-# Get datasets as pandas dataframes
-train_df, valid_df, test_df = data.get_dataset(config)
-
-print(train_df[1])
+# Manually set seed (for reproducability)
+np.random.seed(config.seed)
+torch.manual_seed(config.seed)
 
 if train:
-    # TODO train model
-    a = 0
+    # Get datasets as pandas dataframes
+    train_data, valid_data, test_data = data.get_dataset(config)
+    # Initialize the model
+    model = models.Model(config)
+    # Initialie the training class
+    trainer = trainer.Trainer(model, config)
+    # If continuing, load previous checkpoint
+    if cont:
+        trainer.load()
+    # Train the model
+    for epoch in range(config.num_epochs):
+        print("----------------Epoch #%d of %d" % (epoch+1, config.num_epochs))
+        # Train the model on the training dataset
+        train_accuracy, train_loss = trainer.train(train_data)
+        valid_accuracy, valid_loss = trainer.test(valid_data)
+        # Print results of epoch of training
+        print("-------Results: training accuracy: %.2f, training loss: %.2f, \
+                valid accuracy: %.2f, valid loss %.2f" % (train_accuracy, train_loss, \
+                valid_accuracy, valid_loss))
+        # Save model at end of each epoch
+        trainer.save()
+    # Get final test set results
+    test_accuracy, test_loss = trainer.test(test_data)
+    print("----------------Final Results: test accuracy: %.2f, test loss: %.2f" % (test_accuracy, test_loss))
 
 if infer:
     # TODO add inference ability on random.wav files
-    a = 1
+    a = 0
