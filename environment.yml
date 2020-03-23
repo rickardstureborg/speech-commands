@@ -4,6 +4,7 @@ channels:
   - pytorch
 dependencies:
   - python
+  - ipykernel
   - numpy>=1.16
   - pytorch>0.4
   - torchaudio>=0.4.0
@@ -13,3 +14,4 @@ dependencies:
   - pip:
     - torchvision==0.1.9
     - matplotlib
+    - SpeechRecognition
