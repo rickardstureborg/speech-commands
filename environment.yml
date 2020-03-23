@@ -6,6 +6,9 @@ dependencies:
   - python
   - numpy>=1.16
   - pytorch>0.4
+  - torchaudio>=0.4.0
+  - pandas>=1.0.0
+  - tqdm>=4.43.0
   - pip
   - pip:
     - torchvision==0.1.9
