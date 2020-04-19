@@ -24,14 +24,13 @@ def get_dataset(PATH_SPEAKERS,model,save_file=False):
             text = model.recognize_google(audio)
             # save text file
             if save_file:
-                with open(PATH+'/../slu_data/authors/'+speaker+'/'+speech[:-4]+'.txt','w') as wf:
+                with open(PATH_SPEAKERS+speaker+'/'+speech[:-4]+'.txt','w') as wf:
                     wf.write(text)
-            else:
-                yield text
 
 
 if __name__ == "__main__":
 
     r = sr.Recognizer()
+    PATH = getcwd()
     PATH_SPEAKERS = PATH+'/../slu_data/wavs/speakers/'  # may need to edit this
     get_dataset(PATH_SPEAKERS,r,save_file=True)
