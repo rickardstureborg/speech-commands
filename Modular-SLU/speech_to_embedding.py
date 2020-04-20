@@ -22,12 +22,14 @@ def get_dataset():
                 audio = r.record(source)
             # convert to text
             text = r.recognize_google(audio)
+            print(text)
             # convert into word embeddings
             embeddings = []
             for word in text.split(' '):
                 embeddings.append(w2v.wv['computer'])
             embeddings = torch.Tensor(embeddings)
-            pickle.dump(embeddings, open(PATH_SPEAKERS+speaker+'/'+speech[:-4]+'.p', 'w'))
+            print(embeddings)
+            #pickle.dump(embeddings, open(PATH_SPEAKERS+speaker+'/'+speech[:-4]+'.p', 'w'))
 
 if __name__ == "__main__":
     get_dataset()

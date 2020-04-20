@@ -131,3 +131,4 @@ dmypy.json
 # Dataset
 E2E-SLU/slu_data/
 slu_data/
+GoogleNews-vectors-negative300.bin.gz
